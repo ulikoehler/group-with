@@ -37,7 +37,7 @@ groupWith :: (Ord b) =>
           -> MultiMap b a -- ^ The resulting key --> value multimap
 groupWith f xs = Map.fromListWith (++) [(f x, [x]) | x <- xs]
 
--- | Like groupBy, but the identifier-generating function
+-- | Like groupWith, but the identifier-generating function
 --   may generate multiple keys for each value (or none at all).
 --   The corresponding value from the original list will be placed
 --   in the identifier-corresponding map entry for each generated

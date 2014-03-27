@@ -25,7 +25,7 @@ multimapTupleEq (x,y) = multimapEq x y
 
 main :: IO ()
 main = hspec $ do
-  describe "groupBy" $ do
+  describe "groupWith" $ do
     it "should group a simple value correctly" $
         let data_ = ["a","abc","ab","bc"]
             fn = take 1
@@ -37,4 +37,11 @@ main = hspec $ do
         let fn = error "This function should never be called" :: Int -> Int
             data_ = [] :: [Int]
             result = groupWith fn data_
-        in result `shouldSatisfy` ((==) 1 . Map.size)
+        in result `shouldSatisfy` ((==) 0 . Map.size)
+  describe "groupWithMultiple" $
+    it "should return an empty map when given an empty list" $
+        -- We need to specialize here, although it's ⊥
+        let fn = error "This function should never be called" :: Int -> [Int]
+            data_ = [] :: [Int]
+            result = groupWithMultiple fn data_
+        in result `shouldSatisfy` ((==) 0 . Map.size)

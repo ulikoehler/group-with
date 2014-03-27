@@ -25,7 +25,9 @@ library
   -- hs-source-dirs:
   default-language:    Haskell2010
 
-Test-Suite test-foo
+Test-Suite test-groupby
     type:       exitcode-stdio-1.0
     main-is:    GroupByTest.hs
-    build-depends: base, Cabal >= 1.9.2, exitcode-stdio-1.0
+    default-language:    Haskell2010
+    build-depends: base, Cabal >= 1.9.2, hspec, hspec-expectations,
+                   containers >= 0.3, QuickCheck

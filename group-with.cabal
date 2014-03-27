@@ -1,6 +1,6 @@
 name:                group-with
 version:             0.1.0.0
-synopsis:            A library to classify objects by a function value, like SQL GROUP BY
+synopsis:            Classify objects by a function value, like SQL GROUP BY
 description:         A library to classify objects into multimaps by using a function generating
                      keys for any object in the list.
 

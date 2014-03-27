@@ -2,9 +2,11 @@ name:                group-with
 version:             0.1.0.0
 synopsis:            A library to classify objects by a function value, like SQL GROUP BY
 description:         A library to classify objects into multimaps by using a function generating
-                     keys for any object in the list. Provides a more flexible approach to
-                     GHC.Exts.
+                     keys for any object in the list.
 
+                     This allows an approach similar to SQL GROUP BY.
+
+                     Provides a more flexible approach to `GHC.Exts.groupWith`.
 homepage:            https://github.com/ulikoehler/group-with
 license:             Apache-2.0
 license-file:        LICENSE

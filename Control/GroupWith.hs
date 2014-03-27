@@ -30,16 +30,23 @@ type MultiMap a b = Map a [b]
 -- | Group values in a list by a key, generated
 --   by a given function. The resulting map contains
 --   for each generated key the values (from the given list)
---   that yielded said key by applying the function on said value
-groupWith :: (Ord b) => (a -> b) -> [a] -> MultiMap b a
+--   that yielded said key by applying the function on said value.
+groupWith :: (Ord b) =>
+             (a -> b) -- ^ The function used to map a list value to its key
+          -> [a] -- ^ The list to be grouped
+          -> MultiMap b a -- ^ The resulting key --> value multimap
 groupWith f xs = Map.fromListWith (++) [(f x, [x]) | x <- xs]
 
 -- | Like groupBy, but the identifier-generating function
 --   may generate multiple keys for each value (or none at all).
 --   The corresponding value from the original list will be placed
 --   in the identifier-corresponding map entry for each generated
---   identifier
-groupWithMultiple :: (Ord b) => (a -> [b]) -> [a] -> MultiMap b a
+--   identifier.
+--   Note that values are added to the 
+groupWithMultiple :: (Ord b) =>
+                     (a -> [b]) -- ^ The function used to map a list value to its keys
+                  -> [a] -- ^ The list to be grouped
+                  -> MultiMap b a -- ^ The resulting map
 groupWithMultiple f xs = 
   let identifiers x = [(val, [x]) | val <- f x]
   in Map.fromListWith (++) $ concat [identifiers x | x <- xs]

@@ -16,6 +16,9 @@ module Control.GroupWith where
 -- This can be used similarly to the SQL GROUP BY statement.
 --
 -- Provides a more flexible approach to GHC.Exts.groupWith
+--
+-- > groupWith (take 1) ["a","ab","bc"]
+--     == Map.fromList [("a",["a","ab"]), ("b",["bc"])]
 --  
 -----------------------------------------------------------------------------
 

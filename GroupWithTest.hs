@@ -7,7 +7,6 @@ import Data.Map (Map)
 import Data.List (sort)
 import qualified Data.Map as Map
 
-
 multimapElemEq (k1,v1) (k2,v2) = (k1 == k2) && (sort v1 == sort v2)
 
 -- Check if two multimap-representing lists are equal,
@@ -33,14 +32,25 @@ main = hspec $ do
             result = groupWith fn data_
         in (result, ref) `shouldSatisfy` multimapTupleEq
     it "should return an empty map when given an empty list" $
-        -- We need to specialize here, although it's ⊥
+        -- We need to specialize here, because it's ⊥
         let fn = error "This function should never be called" :: Int -> Int
             data_ = [] :: [Int]
             result = groupWith fn data_
         in result `shouldSatisfy` ((==) 0 . Map.size)
-  describe "groupWithMultiple" $
+  describe "groupWithMultiple" $ do
+    it "should group correctly given a simple list" $
+        let data_ = ["a","abc","ab","bc"]
+            fn x = [take 1 x, take 2 x]
+            -- Note the multiple "a"s in the first line:
+            -- one from `take 1`, one from `take 2`
+            ref = Map.fromList [("a",["a","a","abc","ab"]),
+                                ("ab",["ab","abc"]),
+                                ("b",["bc"]),
+                                ("bc",["bc"])]
+            result = groupWithMultiple fn data_
+        in (result, ref) `shouldSatisfy` multimapTupleEq
     it "should return an empty map when given an empty list" $
-        -- We need to specialize here, although it's ⊥
+        -- We need to specialize here, because it's ⊥
         let fn = error "This function should never be called" :: Int -> [Int]
             data_ = [] :: [Int]
             result = groupWithMultiple fn data_

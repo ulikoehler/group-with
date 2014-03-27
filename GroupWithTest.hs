@@ -2,7 +2,7 @@ import Test.Hspec
 import Test.QuickCheck
 import Control.Exception (evaluate)
 import Control.Monad
-import Control.GroupBy
+import Control.GroupWith
 import Data.Map (Map)
 import Data.List (sort)
 import qualified Data.Map as Map
@@ -30,6 +30,11 @@ main = hspec $ do
         let data_ = ["a","abc","ab","bc"]
             fn = take 1
             ref = Map.fromList [("a",["a","abc","ab"]),("b",["bc"])]
-            result = groupBy fn data_
+            result = groupWith fn data_
         in (result, ref) `shouldSatisfy` multimapTupleEq
-
+    it "should return an empty map when given an empty list" $
+        -- We need to specialize here, although it's ⊥
+        let fn = error "This function should never be called" :: Int -> Int
+            data_ = [] :: [Int]
+            result = groupWith fn data_
+        in result `shouldSatisfy` ((==) 1 . Map.size)

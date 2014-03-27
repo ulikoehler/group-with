@@ -50,3 +50,14 @@ groupWithMultiple :: (Ord b) =>
 groupWithMultiple f xs = 
   let identifiers x = [(val, [x]) | val <- f x]
   in Map.fromListWith (++) $ concat [identifiers x | x <- xs]
+
+-- | Like groupWith, but uses a custom combinator function
+--   > groupWith == groupWithUsing (\v -> [v])
+groupWithUsing :: (Ord b) =>
+             (a -> c) -- ^ Transformer function used to map a value to the resulting type
+          -> (c -> c -> c) -- ^ The combinator used to combine an existing value
+                           --   for a given key with a new value
+          -> (a -> b) -- ^ The function used to map a list value to its key
+          -> [a] -- ^ The list to be grouped
+          -> Map b c -- ^ The resulting key --> transformed value map
+groupWithUsing t c f xs = Map.fromListWith c $ map (\v -> (f v, t v)) xs

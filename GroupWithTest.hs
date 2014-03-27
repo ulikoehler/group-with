@@ -7,6 +7,7 @@ import Data.Map (Map)
 import Data.List (sort)
 import qualified Data.Map as Map
 
+multimapElemEq :: (Eq k, Ord v) => (k,[v]) -> (k,[v]) -> Bool
 multimapElemEq (k1,v1) (k2,v2) = (k1 == k2) && (sort v1 == sort v2)
 
 -- Check if two multimap-representing lists are equal,
@@ -20,6 +21,7 @@ multimapEq :: (Ord a, Ord b, Eq a, Eq b) => Map a [b] -> Map a [b] -> Bool
 multimapEq x y =
     multimapListEq (Map.toList x) (Map.toList y)
 
+multimapTupleEq :: (Ord a, Ord b, Eq a, Eq b) => (Map a [b], Map a [b]) -> Bool
 multimapTupleEq (x,y) = multimapEq x y
 
 main :: IO ()
@@ -37,6 +39,25 @@ main = hspec $ do
             data_ = [] :: [Int]
             result = groupWith fn data_
         in result `shouldSatisfy` ((==) 0 . Map.size)
+    -- Fuzzing, couldn't get this to compile properly yet
+    -- it "should not crash for any input string list" $
+    --    property $ (\d -> groupWith (take 1) d `seq` True)
+  describe "groupWithUsing" $ do
+    it "should return an empty map when given an empty list" $
+        -- We need to specialize here, because it's ⊥
+        let fn = error "This function should never be called" :: Int -> Int
+            data_ = [] :: [Int]
+            result = groupWith fn data_
+        in result `shouldSatisfy` ((==) 0 . Map.size)
+    it "should be usable for counting" $
+        -- Instead of building up lists, we count the number of elements
+        let t n = 1 -- For each x, count 1
+            c = (+) -- Sum up the counts
+            fn = take 1
+            data_ = ["a","abc","ab","bc"]
+            ref = Map.fromList [("a",3),("b",1)] :: Map String Int
+            result = groupWithUsing t c fn data_
+        in result `shouldBe` ref
   describe "groupWithMultiple" $ do
     it "should group correctly given a simple list" $
         let data_ = ["a","abc","ab","bc"]

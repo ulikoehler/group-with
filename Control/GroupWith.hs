@@ -1,4 +1,4 @@
-module Control.GroupWith where
+
 -----------------------------------------------------------------------------
 -- |
 -- Module      :  Control.GroupWiths
@@ -17,10 +17,15 @@ module Control.GroupWith where
 --
 -- Provides a more flexible approach to GHC.Exts.groupWith
 --
--- > groupWith (take 1) ["a","ab","bc"]
---     == Map.fromList [("a",["a","ab"]), ("b",["bc"])]
+-- > groupWith (take 1) ["a","ab","bc"] == Map.fromList [("a",["a","ab"]), ("b",["bc"])]
 --  
 -----------------------------------------------------------------------------
+module Control.GroupWith(
+        MultiMap,
+        groupWith,
+        groupWithMultiple,
+        groupWithUsing
+    ) where
 
 import Data.Map (Map)
 import qualified Data.Map as Map
@@ -52,7 +57,6 @@ groupWithMultiple f xs =
   in Map.fromListWith (++) $ concat [identifiers x | x <- xs]
 
 -- | Like groupWith, but uses a custom combinator function
---   > groupWith == groupWithUsing (\v -> [v])
 groupWithUsing :: (Ord b) =>
              (a -> c) -- ^ Transformer function used to map a value to the resulting type
           -> (c -> c -> c) -- ^ The combinator used to combine an existing value

@@ -96,3 +96,21 @@ main = hspec $ do
     -- Fuzzing, couldn't get this to compile properly yet
     -- it "should not crash for any input string list" $
     --    property $ (\d -> groupWith (take 1) d `seq` True)
+  describe "groupWithMultipleM" $ do
+    it "should group correctly given a simple list" $
+        let data_ = ["a","abc","ab","bc"]
+            fn x = Just [take 1 x, take 2 x]
+            -- Note the multiple "a"s in the first line:
+            -- one from `take 1`, one from `take 2`
+            ref = Map.fromList [("a",["a","a","abc","ab"]),
+                                ("ab",["ab","abc"]),
+                                ("b",["bc"]),
+                                ("bc",["bc"])]
+            result = groupWithMultipleM fn data_
+        in (fromJust result, ref) `shouldSatisfy` multimapTupleEq
+    it "should return an empty map when given an empty list" $
+        -- We need to specialize here, because it's ⊥
+        let fn = error "This function should never be called" :: Int -> Maybe [Int]
+            data_ = [] :: [Int]
+            result = groupWithMultipleM fn data_
+        in (fromJust result) `shouldSatisfy` ((==) 0 . Map.size)

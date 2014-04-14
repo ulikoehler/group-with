@@ -121,7 +121,7 @@ groupWithMultipleM :: (Ord b, Monad m, Applicative m) =>
                   -> m (MultiMap b a) -- ^ The resulting map
 groupWithMultipleM f xs = 
   let identifiers x = (\vals -> [(val, [x]) | val <- vals]) <$> f x
-      idMap = concat <$> (mapM identifiers xs) -- :: [m [(b, [a])]]
+      idMap = concat <$> (mapM identifiers xs)
   in Map.fromListWith (++) <$> idMap
 
 -- | Like 'groupWithM', but uses a custom combinator function

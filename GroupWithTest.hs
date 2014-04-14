@@ -114,3 +114,19 @@ main = hspec $ do
             data_ = [] :: [Int]
             result = groupWithMultipleM fn data_
         in (fromJust result) `shouldSatisfy` ((==) 0 . Map.size)
+  describe "groupWithUsingM" $ do
+    it "should return an empty map when given an empty list" $
+        -- We need to specialize here, because it's ⊥
+        let fn = error "This function should never be called" :: Int -> Maybe Int
+            data_ = [] :: [Int]
+            result = groupWithUsingM return (+) fn data_
+        in (fromJust result) `shouldSatisfy` ((==) 0 . Map.size)
+    it "should be usable for counting" $
+        -- Instead of building up lists, we count the number of elements
+        let t n = return 1 -- For each x, count 1
+            c = (+) -- Sum up the counts
+            fn = return . take 1
+            data_ = ["a","abc","ab","bc"]
+            ref = Map.fromList [("a",3),("b",1)] :: Map String Int
+            result = groupWithUsingM t c fn data_
+        in fromJust result `shouldBe` ref

@@ -48,7 +48,7 @@ main = hspec $ do
         -- We need to specialize here, because it's ⊥
         let fn = error "This function should never be called" :: Int -> Int
             data_ = [] :: [Int]
-            result = groupWith fn data_
+            result = groupWithUsing id (+) fn data_
         in result `shouldSatisfy` ((==) 0 . Map.size)
     it "should be usable for counting" $
         -- Instead of building up lists, we count the number of elements

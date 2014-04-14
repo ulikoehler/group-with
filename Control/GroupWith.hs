@@ -20,7 +20,9 @@
 -- > groupWith (take 1) ["a","ab","bc"] == Map.fromList [("a",["a","ab"]), ("b",["bc"])]
 --
 -- In order to use monadic / applicative functions as key generators,
--- use the A-postfixed variants like 'groupWithA'.
+-- use the A- or M-postfixed variants like 'groupWithA' or 'groupWithMultipleM'
+--
+-- 
 --  
 -----------------------------------------------------------------------------
 module Control.GroupWith(
@@ -118,3 +120,14 @@ groupWithMultipleM f xs =
   let identifiers x = (\vals -> [(val, [x]) | val <- vals]) <$> f x
       idMap = concat <$> (mapM identifiers xs) -- :: [m [(b, [a])]]
   in Map.fromListWith (++) <$> idMap
+
+-- | Like 'groupWithM', but uses a custom combinator function
+groupWithUsingM :: (Ord b, Monad m, Applicative m) =>
+             (a -> m c) -- ^ Transformer function used to map a value to the resulting type
+          -> (c -> c -> c) -- ^ The combinator used to combine an existing value
+                           --   for a given key with a new value
+          -> (a -> m b) -- ^ The function used to map a list value to its key
+          -> [a] -- ^ The list to be grouped
+          -> m (Map b c) -- ^ The resulting key --> transformed value map
+groupWithUsingM t c f xs =
+  Map.fromListWith c <$> mapM (\v -> fuseT2 (f v, t v)) xs

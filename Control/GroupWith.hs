@@ -36,8 +36,8 @@ module Control.GroupWith(
         groupWithUsingM
     ) where
 
-import Data.Map (Map)
-import qualified Data.Map as Map
+import Data.Map.Strict (Map)
+import qualified Data.Map.Strict as Map
 
 import Control.Arrow (first, second)
 import Control.Applicative (Applicative, (<$>), liftA2, pure)

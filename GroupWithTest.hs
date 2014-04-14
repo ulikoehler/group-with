@@ -4,6 +4,7 @@ import Control.Exception (evaluate)
 import Control.Monad
 import Control.GroupWith
 import Data.Map (Map)
+import Data.Maybe (fromJust)
 import Data.List (sort)
 import qualified Data.Map as Map
 
@@ -76,3 +77,22 @@ main = hspec $ do
             data_ = [] :: [Int]
             result = groupWithMultiple fn data_
         in result `shouldSatisfy` ((==) 0 . Map.size)
+  {-
+    NOTE: We will use Maybe as monad / applicative functor for this test
+  -}
+  describe "groupWithM" $ do
+    it "should group a simple value correctly" $
+        let data_ = ["a","abc","ab","bc"]
+            fn = Just . take 1
+            ref = Map.fromList [("a",["a","abc","ab"]),("b",["bc"])]
+            result = groupWithM fn data_
+        in (fromJust result, ref) `shouldSatisfy` multimapTupleEq
+    it "should return an empty map when given an empty list" $
+        -- We need to specialize here, because it's ⊥
+        let fn = error "This function should never be called" :: Int -> Maybe Int
+            data_ = [] :: [Int]
+            result = groupWithM fn data_
+        in (fromJust result) `shouldSatisfy` ((==) 0 . Map.size)
+    -- Fuzzing, couldn't get this to compile properly yet
+    -- it "should not crash for any input string list" $
+    --    property $ (\d -> groupWith (take 1) d `seq` True)

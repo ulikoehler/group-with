@@ -30,7 +30,10 @@ module Control.GroupWith(
         groupWith,
         groupWithMultiple,
         groupWithUsing,
-        groupWithA
+        groupWithA,
+        groupWithM,
+        groupWithMultipleM,
+        groupWithUsingM
     ) where
 
 import Data.Map (Map)

@@ -1,0 +1,10 @@
+** 0.2.x
+
+0.1.0.0 --> 0.2.0.0
+===============
+
+* Support monadic and applicative (where possible) grouping
+
+* Add and fix unit tests for monadic and pure grouping
+
+* Use strict map by default to avoid buildup of thunks

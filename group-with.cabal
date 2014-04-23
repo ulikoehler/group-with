@@ -1,5 +1,5 @@
 name:                group-with
-version:             0.2.0.1
+version:             0.2.0.2
 synopsis:            Classify objects by key-generating function, like SQL GROUP BY
 description:         A library to classify objects into multimaps by using a function generating
                      keys for any object in the list.

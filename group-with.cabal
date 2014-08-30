@@ -1,8 +1,9 @@
 name:                group-with
 version:             0.2.0.2
-synopsis:            Classify objects by key-generating function, like SQL GROUP BY
-description:         A library to classify objects into multimaps by using a function generating
-                     keys for any object in the list.
+synopsis:            Classify objects by key-generating function,
+                     like SQL GROUP BY
+description:         A library to classify objects into multimaps by using a
+                     function generating keys for any object in the list.
 
                      This allows an approach similar to SQL GROUP BY.
 
@@ -12,7 +13,7 @@ license:             Apache-2.0
 license-file:        LICENSE
 author:              Uli Köhler
 maintainer:          ukoehler@techoverflow.net
--- copyright:           
+-- copyright:
 category:            Data
 build-type:          Simple
 extra-source-files:  README.md changelog
